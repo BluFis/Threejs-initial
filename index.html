@@ -1,0 +1,103 @@
+<!--制作https://github.com/BluFis/
+转载请注明作者
+2018.07.19-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>A*寻路算法(threeJS)</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	
+	
+</head>
+<body>
+
+<script src="js/three.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script type="text/javascript" src="js/astar.js" ></script>
+
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+
+<script>
+
+
+var container, scene, camera, renderer, controls;
+var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+var windowWidth, windowHeight;
+
+threeStart();
+
+function threeStart() {
+    initThree();
+    initScene();
+    initCamera();   
+    initLight();
+    initControl();
+    initStatus();
+    renderer.clear();
+    animate();
+}
+
+function initThree(){
+	
+	if ( Detector.webgl )
+		renderer = new THREE.WebGLRenderer( {antialias:true} );
+	else
+		renderer = new THREE.CanvasRenderer(); 
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	container = document.getElementById( 'ThreeJS' );
+	container.appendChild( renderer.domElement );
+	
+}
+function initCamera(){
+
+		camera = new THREE.PerspectiveCamera( VIEW_ANGLE , ASPECT, NEAR, FAR);
+	    camera.position.set(0,200,250);
+	    camera.lookAt(scene.position);	
+}
+function initScene(){
+	scene = new THREE.Scene();
+}
+function initLight(){
+	var ambientLight = new THREE.AmbientLight(0x111111);
+	scene.add(ambientLight);
+}
+function initControl(){
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
+}
+
+function initStatus(){
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	container.appendChild( stats.domElement );
+}
+
+function updateSize() {
+	if ( windowWidth != window.innerWidth || windowHeight != window.innerHeight ) {
+		windowWidth  = window.innerWidth;
+		windowHeight = window.innerHeight;
+		renderer.setSize ( windowWidth, windowHeight );
+	}
+}
+
+function animate() {
+	render();
+	controls.update();
+	stats.update();
+	requestAnimationFrame( animate );
+}
+function render() {
+	updateSize();
+	renderer.render( scene, camera );
+}
+
+
+</script>
+
+</body>
+</html>
